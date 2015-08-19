@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="alert alert-danger" ng-show="error!=undefined">
+    <button type="button" class="close" ng-click="error=undefined"><span>&times;</span>
+    </button>
+    {{error}}
+  </div>
+  <div class="page-header">
+    <h4>{{account.name}}</h4>
+  </div>
+  <ol class="breadcrumb">
+    <li ng-repeat="part in paths">
+      <a ng-click="partSelected(part)">{{part.name}}</a>
+    </li>
+  </ol>
+
+  <!-- Loading view-->
+  <div ng-if="files == undefined" class="jumbotron text-center">
+    <p>Loading, please wait</p>
+  </div>
+
+  <!-- Fileinfo view-->
+  <table ng-if="files !== undefined" class="table table-hover">
+    <thead>
+      <td>Name</td>
+      <td>Modified</td>
+      <td>Size</td>
+    </thead>
+    <tbody>
+      <tr ng-repeat="file in files" ng-click="fileSelected(file)" ng-class="{ 'active' : file === selected.file }">
+        <td>
+          <image src="images/folder.png" width="32px" height="32px" ng-if="file.isDir"></image>
+          <image src="images/file.png" width="32px" height="32px" ng-if="file.isDir==false"></image>
+          {{file.name}}
+        </td>
+        <td>{{file.modified}}</td>
+        <td>{{file.size}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
