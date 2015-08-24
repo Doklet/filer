@@ -30,7 +30,8 @@
         <td>
           <image src="images/folder.png" width="32px" height="32px" ng-if="file.isDir"></image>
           <image src="images/file.png" width="32px" height="32px" ng-if="file.isDir==false"></image>
-          {{file.name}}
+          <a ng-if="file.isDir==false" ng-href="{{computeDownloadUrl(file)}}">{{file.name}}</a>
+          <a ng-if="file.isDir==true" >{{file.name}}</a>
         </td>
         <td>{{file.modified}}</td>
         <td>{{file.size}}</td>

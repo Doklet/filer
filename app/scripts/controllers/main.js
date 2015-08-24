@@ -76,7 +76,7 @@ angular.module('filerApp')
       if (selectedFile.isDir === true) {
 
         // Clear the current fileinfos list
-        $scope.fileinfos = undefined;
+        $scope.files = undefined;
 
         // Load the fileinfo for the account and path
         FileService.getFileInfo($scope.account.id, selectedFile.path)
@@ -94,6 +94,16 @@ angular.module('filerApp')
           });
 
       }
+    };
+
+    $scope.computeDownloadUrl = function(fileinfo) {
+      var commands = 'pipe=echo';
+
+      var args = '&token=' + Client.getSessionId();
+      args += '&input=' + $scope.account.name + fileinfo.path;
+      args += '&download=' + fileinfo.name;
+
+      return '/api/pipe/run?' + commands + args;
     };
 
   });

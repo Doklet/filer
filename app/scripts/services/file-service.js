@@ -8,4 +8,8 @@ angular.module('filerApp')
       return $http.get('/api/account/' + accountId +'/file_info/' + path);
     };
 
+    this.downloadFile = function(accountName, path) {
+    	return $http.get('/api/account/' + accountId +'/file_info/' + path);
+    };
+
   });
