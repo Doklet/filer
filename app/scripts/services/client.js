@@ -5,7 +5,7 @@ angular.module('filerApp')
 
     var _sessionId;
     var _docletId;
-
+    var _doclets;
     var _account;
 
     this.getSessionId = function() {
@@ -30,6 +30,14 @@ angular.module('filerApp')
 
     this.setAccount = function(account) {
       _account = account;
+    };
+
+    this.setDoclets = function(doclets) {
+      _doclets = doclets;
+    };
+
+    this.getDoclets = function() {
+      return _doclets;
     };
 
   });

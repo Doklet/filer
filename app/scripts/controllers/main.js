@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('filerApp')
-  .controller('MainCtrl', function($scope, $location, $window, Client, AccountService, FileService) {
+  .controller('MainCtrl', function($scope, $location, $window, Client, AccountService, FileService, DocletService, PipeService) {
 
     $scope.account = undefined;
     $scope.files = undefined;
     $scope.paths = undefined;
-
+    $scope.selectedFile = undefined;
 
     // Show the root files
     if (Client.getAccount() === undefined) {
@@ -48,6 +48,17 @@ angular.module('filerApp')
         .error(function() {
           $scope.error = 'Failed to fetch account';
         });
+
+      // Store doclets
+      DocletService.list()
+        .success(function(doclets) {
+          Client.setDoclets(doclets);
+          $scope.doclets = Client.getDoclets();
+        })
+        .error(function() {
+          $scope.info = undefined;
+          $scope.error = 'Failed to fetch doclets';
+        });
     }
 
     $scope.partSelected = function(part) {
@@ -58,6 +69,8 @@ angular.module('filerApp')
 
       // Clear the current fileinfos list
       $scope.files = undefined;
+      // Clear selected file 
+      $scope.selectedFile = undefined;
 
       // Load the fileinfo for the account and path
       FileService.getFileInfo($scope.account.id, part.path)
@@ -71,7 +84,16 @@ angular.module('filerApp')
         });
     };
 
-    $scope.fileSelected = function(selectedFile) {
+    $scope.selectFile = function(file) {
+
+      if (file.isDir === false) {
+        $scope.selectedFile = file;
+      }
+    };
+
+    $scope.showDirectory = function(selectedFile) {
+
+      $scope.selectedFile = undefined;
 
       if (selectedFile.isDir === true) {
 
@@ -104,6 +126,27 @@ angular.module('filerApp')
       args += '&download=' + fileinfo.name;
 
       return '/api/pipe/run?' + commands + args;
+    };
+
+    $scope.saveTo = function(dashboard) {
+
+      // Execute the pipe with the provided parameters
+      var commands = 'echo';
+      var filePath = $scope.account.name + $scope.selectedFile.path;
+
+      var cmd = 'brick --text --name=New --cmds="' + $window.btoa(commands) + '" --bricksid=' + dashboard.id;
+      cmd += ' --file="' + filePath + '"';
+
+      PipeService.execute(cmd)
+        .success(function() {
+          var home = $window.unescape($location.search().home);
+          $window.top.location = home + '/' + dashboard.id;
+        })
+        .error(function() {
+          $scope.info = undefined;
+          $scope.error = 'Failed to save brick';
+        });
+
     };
 
   });

@@ -7,17 +7,29 @@
   <div class="page-header">
     <h4>{{account.name}}</h4>
   </div>
-  <ol class="breadcrumb">
-    <li ng-repeat="part in paths">
-      <a ng-click="partSelected(part)">{{part.name}}</a>
-    </li>
-  </ol>
-
+  <div>
+    <ol class="breadcrumb">
+      <li ng-repeat="part in paths">
+        <a ng-click="partSelected(part)">{{part.name}}</a>
+      </li>
+    </ol>
+    <h5 ng-show="selectedFile!==undefined">{{selectedFile.name}} <span>
+      <div class="btn-group pull-right">
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Save <span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li class="dropdown-header">Dashboard</li>
+          <li ng-repeat="doclet in doclets | dashboardFilter">
+            <a ng-click="saveTo(doclet)">{{doclet.name}}</a>
+          </li>
+        </ul>
+      </div>      
+    </span>
+    </h5>
+  </div>
   <!-- Loading view-->
   <div ng-if="files == undefined" class="jumbotron text-center">
     <p>Loading, please wait</p>
   </div>
-
   <!-- Fileinfo view-->
   <table ng-if="files !== undefined" class="table table-hover">
     <thead>
@@ -26,12 +38,12 @@
       <td>Size</td>
     </thead>
     <tbody>
-      <tr ng-repeat="file in files" ng-click="fileSelected(file)" ng-class="{ 'active' : file === selected.file }">
-        <td>
+      <tr ng-repeat="file in files" ng-click="selectFile(file)" ng-class="{ 'active' : file === selected.file }">
+        <td ng-click="showDirectory(file)">
           <image src="images/folder.png" width="32px" height="32px" ng-if="file.isDir"></image>
           <image src="images/file.png" width="32px" height="32px" ng-if="file.isDir==false"></image>
           <a ng-if="file.isDir==false" ng-href="{{computeDownloadUrl(file)}}">{{file.name}}</a>
-          <a ng-if="file.isDir==true" >{{file.name}}</a>
+          <a ng-if="file.isDir==true">{{file.name}}</a>
         </td>
         <td>{{file.modified}}</td>
         <td>{{file.size}}</td>
