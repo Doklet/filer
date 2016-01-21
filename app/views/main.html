@@ -5,7 +5,7 @@
     {{error}}
   </div>
   <div class="page-header">
-    <h4>{{account.name}}</h4>
+    <h4>Filer <small>{{account.name}}</small>
   </div>
   <div>
     <ol class="breadcrumb">
@@ -13,18 +13,6 @@
         <a ng-click="partSelected(part)">{{part.name}}</a>
       </li>
     </ol>
-    <h5 ng-show="selectedFile!==undefined">{{selectedFile.name}} <span>
-      <div class="btn-group pull-right">
-        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Save <span class="caret"></span></button>
-        <ul class="dropdown-menu dropdown-menu-right">
-          <li class="dropdown-header">Dashboard</li>
-          <li ng-repeat="doclet in doclets | dashboardFilter">
-            <a ng-click="saveTo(doclet)">{{doclet.name}}</a>
-          </li>
-        </ul>
-      </div>      
-    </span>
-    </h5>
   </div>
   <!-- Loading view-->
   <div ng-if="files == undefined" class="jumbotron text-center">
@@ -47,6 +35,17 @@
         </td>
         <td>{{file.modified}}</td>
         <td>{{file.size}}</td>
+        <td>
+          <div class="btn-group pull-right">
+            <button ng-show="file===selectedFile" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Save <span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li class="dropdown-header">Dashboard</li>
+              <li ng-repeat="doclet in doclets | dashboardFilter">
+                <a ng-click="saveTo(doclet)">{{doclet.name}}</a>
+              </li>
+            </ul>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
